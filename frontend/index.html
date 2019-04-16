@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+	<div id="container">
+		<h1>Teste de View com Tabela Employees</h1>
+		<div style="align-items: center;">
+			<input type="text" id="id" name="id" value="1"></input>
+			<button type="button" onclick="getOne()">Visualizar</button>
+			<button type="button" onclick="ListAll()">Listar Todos</button>
+		</div>
+		<br/>
+		<div id="data"></div>
+	</div>
+	<script>
+		function RenderSingleEmployeeData(myArr) {
+			var table = '<table>';
+			for (var key in myArr.data[0]) {
+				table += '<tr><td>' + key + '</td><td>' + myArr.data[0][key] + '</td></tr>';
+			}
+			table += '</table>';
+
+			document.getElementById("data").innerHTML = table;
+		}
+
+		function RenderAllEmployeesData(myArr) {
+			var table = '<table>';
+			table += '<th><td>Last Name</td><td>First Name</td><td>Title</td><td>Reports To</td><td>Birth Date</td><td>Hire Date</td><td>Address</td><td>City</td><td>State</td><td>Country</td><td>Postal Code</td><td>Phone</td><td>Fax</td><td>Email</td></th>';
+
+			for (var i = 0; i < myArr.employees.length; i++) {
+				table += '<tr>';
+				for (var key in myArr.employees[i]) {
+					table += '<td>' + myArr.employees[i][key] + '</td>';
+				}
+				table += '</tr>';
+			}
+			table += '</table>';
+
+			document.getElementById("data").innerHTML = table;
+		}
+
+		function ListAll() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					var myArr = JSON.parse(this.responseText);
+					RenderAllEmployeesData(myArr)
+				}
+			};
+			var url = "/api/employees"
+			xhttp.open("GET", url, true);
+			xhttp.send();
+		}
+
+		function getOne() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					var myArr = JSON.parse(this.responseText);
+					RenderSingleEmployeeData(myArr)
+				} else if (this.readyState == 4 && this.status == 404) {
+					document.getElementById("data").innerHTML = "Employee not found";
+				}
+			};
+			var url = "/api/employees/" + document.getElementById("id").value
+			xhttp.open("GET", url, true);
+			xhttp.send();
+		}
+
+		document.onreadystatechange = function () {
+			if (document.readyState == "complete") {
+				ListAll();
+			}
+		}
+	</script>
+</body>
+
+</html>

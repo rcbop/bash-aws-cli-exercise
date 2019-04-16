@@ -1,0 +1,25 @@
+version: '2.3'
+services:
+  employees_rest_api:
+    container_name: server
+    image: ${DOCKER_IMAGE_NAME:-employees-server}:${DOCKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    build:
+      dockerfile: server/Dockerfile
+      context: .
+    volumes:
+    - ./server/server.py:/app/server.py
+
+  frontend_nginx:
+    container_name: frontend-nginx
+    build:
+      context: frontend
+    image: frontend_nginx:${DOCKER_IMAGE_TAG:-latest}
+    volumes:
+    - ./frontend/index.html:/www/data/index.html
+    command:
+    - nginx
+    - -g
+    - daemon off;
+    ports:
+    - 8080:8080

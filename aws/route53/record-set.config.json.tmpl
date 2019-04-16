@@ -1,0 +1,17 @@
+{
+    \"Comment\": \"${EB_ENVIRONMENT_NAME}\",
+    \"Changes\": [
+        {
+            \"Action\": \"UPSERT\",
+            \"ResourceRecordSet\": {
+                \"Name\": \"${CNAME_ALIAS}\",
+                \"Type\": \"A\",
+                \"AliasTarget\": {
+                    \"HostedZoneId\": \"${HOSTED_ZONE_ID}\",
+                    \"DNSName\": \"${AWS_CF_DOMAIN_NAME}\",
+                    \"EvaluateTargetHealth\": false
+                }
+            }
+        }
+    ]
+}
